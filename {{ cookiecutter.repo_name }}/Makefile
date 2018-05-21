@@ -111,8 +111,12 @@ endif
 docker_login:
 	$$(aws ecr get-login --no-include-email)
 
+populate_aws_id:
+	export AWS_ACCOUNT_ID=$(shell aws sts get-caller-identity \
+                                --output text --query 'Account')
+
 ## pull the analytics-base image
-pull_base_image: docker_login
+pull_base_image: docker_login populate_aws_id
 	docker pull ${AWS_BASE_IMAGE} \
         && docker tag ${AWS_BASE_IMAGE} analytics-base:${IMAGE_VERSION}
 
