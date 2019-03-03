@@ -1,7 +1,5 @@
-ARG version
-
-FROM analytics-base:$version
-LABEL maintainer="Neighborhoods <neighborhoods.engineering@neighborhoods.com>"
+FROM tensorflow/tensorflow:latest-gpu-jupyter
+LABEL maintainer="Neighborhoods <david.zornek@gmail.com>"
 
 ARG directory
 

@@ -12,12 +12,8 @@ PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 BUCKET = {{ cookiecutter.s3_bucket }}
 PROFILE = {{ cookiecutter.aws_profile }}
 PROJECT_NAME = {{ cookiecutter.repo_name }}
-PYTHON_INTERPRETER = {{ cookiecutter.python_interpreter }}
 IMAGE_VERSION = {{ cookiecutter.base_image_version }}
 SLASH = /
-
-AWS_ECR_SERVER=${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
-AWS_BASE_IMAGE=${AWS_ECR_SERVER}/datascience/analytics-base:${IMAGE_VERSION}
 
 #################################################################################
 # PROJECT RULES                                                                 #
@@ -72,39 +68,6 @@ ifeq (default,$(PROFILE))
 	aws s3 sync s3://$(BUCKET)/models/ models/
 else
 	aws s3 sync s3://$(BUCKET)/models/ models/ --profile $(PROFILE)
-endif
-
-## Upload references to S3
-sync_references_to_s3:
-ifeq (default,$(PROFILE))
-	aws s3 sync references/ s3://$(BUCKET)/references/
-else
-	aws s3 sync references/ s3://$(BUCKET)/references/ --profile $(PROFILE)
-endif
-
-## Download references from S3
-sync_references_from_s3:
-ifeq (default,$(PROFILE))
-	aws s3 sync s3://$(BUCKET)/references/ references/
-else
-	aws s3 sync s3://$(BUCKET)/references/ references/ --profile $(PROFILE)
-endif
-
-
-## Upload logs to S3
-sync_logs_to_s3:
-ifeq (default,$(PROFILE))
-	aws s3 sync logs/ s3://$(BUCKET)/logs/
-else
-	aws s3 sync logs/ s3://$(BUCKET)/logs/ --profile $(PROFILE)
-endif
-
-## Download references from S3
-sync_logs_from_s3:
-ifeq (default,$(PROFILE))
-	aws s3 sync s3://$(BUCKET)/logs/ logs/
-else
-	aws s3 sync s3://$(BUCKET)/logs/ logs/ --profile $(PROFILE)
 endif
 
 populate_aws_id:
